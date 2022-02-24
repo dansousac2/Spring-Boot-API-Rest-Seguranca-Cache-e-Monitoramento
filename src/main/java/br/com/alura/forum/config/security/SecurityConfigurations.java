@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -21,6 +20,9 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AutenticacaoService autenticacaoService;
+	
+	@Autowired
+	private TokenService tokenService;
 	
 	//fazer com que o Spring aceite injeção de dependências dessa classe.
 	@Override
@@ -45,7 +47,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.anyRequest().authenticated() //qualquer outra requisição deve ser autenticada. Essas configuralções de autenticação devem ser criadas
 		.and().csrf().disable() //desabilita segurança contra csrf, já que o armazenamento será local.
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().addFilterBefore(new AutenticacaoViaTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	//configurações de recursos estáticos (requisições: js, css, imagens, etc.)
