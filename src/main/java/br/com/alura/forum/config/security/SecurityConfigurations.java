@@ -48,6 +48,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/topicos").permitAll()
 		.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
+		.antMatchers(HttpMethod.GET, "/actuator").permitAll() //não é usado com essa permissão aberta por expôr dados sensíveis sobre a aplicação.
+		.antMatchers(HttpMethod.GET, "/actuator/**").permitAll() //permite subrcursos de subrecursos de actuator
 		.antMatchers(HttpMethod.POST, "/auth").permitAll()
 		.anyRequest().authenticated() //qualquer outra requisição deve ser autenticada. Essas configuralções de autenticação devem ser criadas
 		.and().csrf().disable() //desabilita segurança contra csrf, já que o armazenamento será local.
